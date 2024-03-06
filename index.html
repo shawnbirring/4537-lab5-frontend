@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Patients</title>
+</head>
+
+<body>
+  <div>
+    <h2>Query</h2>
+    <textarea id="query" placeholder="Enter SQL query"></textarea>
+    <button onclick="executeQuery()">Submit</button>
+    <div id="queryResponse"></div>
+  </div>
+  <button onclick="postPatients()">Post Patients</button>
+  <div id="patients-post-result"></div>
+  <h1>Patients Database</h1>
+  <script>
+    const patients = [
+      { name: "Sara Brown", birthdate: "1901-01-01" },
+      { name: "John Smith", birthdate: "1941-01-01" },
+      { name: "Jack Ma", birthdate: "1961-01-30" },
+      { name: "Elon Musk", birthdate: "1999-01-01" },
+    ];
+    function postPatients() {
+      document.getElementById("patients-post-result").innerText = "";
+      fetch("http://localhost:3000/patients", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(patients),
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          console.log("Success:", data);
+          document.getElementById("patients-post-result").innerText =
+            "Patients posted successfully";
+        })
+        .catch((error) => {
+          console.error("Error:", error);
+          document.getElementById("patients-post-result").innerText =
+            "Error posting patients";
+        });
+    }
+    function executeQuery() {
+      document.getElementById("queryResponse").innerText = "";
+      const query = document.getElementById("query").value;
+      const requestType = determineRequestType(query);
+      const url =
+        requestType === "GET"
+          ? `http://localhost:3000/patients?query=${query}`
+          : `http://localhost:3000/patients`;
+
+      if (requestType === null) {
+        document.getElementById("queryResponse").innerText =
+          "Invalid query type";
+        return;
+      }
+
+      fetch(url, { method: requestType })
+        .then((response) => response.json())
+        .then((data) => {
+          document.getElementById("queryResponse").innerText =
+            JSON.stringify(data);
+        })
+        .catch((error) => {
+          console.error("Error: ", error);
+          document.getElementById("queryResponse").innerText =
+            "Error: " + error;
+        });
+    }
+
+    function determineRequestType(query) {
+      if (query.toLowerCase().includes("select")) {
+        return "GET";
+      } else if (query.toLowerCase().includes("insert")) {
+        return "POST";
+      } else {
+        return null;
+      }
+    }
+  </script>
+</body>
+
+</html>
