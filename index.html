@@ -27,7 +27,7 @@
       { name: "Elon Musk", birthdate: "1999-01-01" },
     ];
     function postPatients() {
-      document.getElementById("patients-post-result").innerText = "";
+      document.getElementById("patients-post-result").innerText = "...";
       fetch(BASE_URL, {
         method: "POST",
         headers: {
@@ -48,7 +48,7 @@
         });
     }
     function executeQuery() {
-      document.getElementById("queryResponse").innerText = "";
+      document.getElementById("queryResponse").innerText = "...";
       const query = document.getElementById("query").value;
       const requestType = determineRequestType(query);
       const url =
