@@ -28,7 +28,7 @@
     ];
     function postPatients() {
       document.getElementById("patients-post-result").innerText = "...";
-      const query = `INSERT INTO patient VALUES ${patients.map(patient => `('${patient.name}', '${patient.birthdate}')`).join(', ')}`;
+      const query = `INSERT INTO patient (name, birthdate) VALUES ${patients.map(patient => `('${patient.name}', '${patient.birthdate}')`).join(', ')}`;
       fetch(BASE_URL, {
         method: "POST",
         headers: {
@@ -52,7 +52,7 @@
               "Patients posted successfully";
           } else {
             console.log("Success:", data);
-            document.getElementById("patients-post-result").innerHTML = data; // Assuming it's HTML
+            document.getElementById("patients-post-result").innerHTML = data;
           }
         })
         .catch((error) => {
