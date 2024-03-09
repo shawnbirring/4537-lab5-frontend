@@ -28,18 +28,32 @@
     ];
     function postPatients() {
       document.getElementById("patients-post-result").innerText = "...";
+      const query = `INSERT INTO patient VALUES ${patients.map(patient => `('${patient.name}', '${patient.birthdate}')`).join(', ')}`;
       fetch(BASE_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ query: `INSERT INTO patient VALUES ${patients.map(patient => `('${patient.name}', '${patient.birthdate}')`).join(', ')}` }),
+        body: JSON.stringify({ query: query }),
       })
-        .then((response) => response.json())
+        .then((response) => {
+          console.log(response);
+          const contentType = response.headers.get("Content-Type");
+          if (contentType && contentType.includes("application/json")) {
+            return response.json();
+          } else {
+            return response.text();
+          }
+        })
         .then((data) => {
-          console.log("Success:", data);
-          document.getElementById("patients-post-result").innerText =
-            "Patients posted successfully";
+          if (typeof data === 'object') {
+            console.log("Success:", data);
+            document.getElementById("patients-post-result").innerText =
+              "Patients posted successfully";
+          } else {
+            console.log("Success:", data);
+            document.getElementById("patients-post-result").innerHTML = data; // Assuming it's HTML
+          }
         })
         .catch((error) => {
           console.error("Error:", error);
@@ -47,6 +61,7 @@
             "Error posting patients";
         });
     }
+
     function executeQuery() {
       document.getElementById("queryResponse").innerText = "...";
       const query = document.getElementById("query").value;
@@ -63,10 +78,22 @@
       }
 
       fetch(url, { method: requestType, body: requestType === 'POST' ? JSON.stringify({ query }) : null })
-        .then((response) => response.json())
+        .then((response) => {
+          console.log(response);
+          const contentType = response.headers.get("Content-Type");
+          if (contentType && contentType.includes("application/json")) {
+            return response.json();
+          } else {
+            return response.text();
+          }
+        })
         .then((data) => {
-          document.getElementById("queryResponse").innerText =
-            JSON.stringify(data);
+          if (typeof data === 'object') {
+            document.getElementById("queryResponse").innerText =
+              JSON.stringify(data);
+          } else {
+            document.getElementById("queryResponse").innerHTML = data;
+          }
         })
         .catch((error) => {
           console.error("Error: ", error);
@@ -74,6 +101,7 @@
             "Error: " + error;
         });
     }
+
 
     function determineRequestType(query) {
       if (query.toLowerCase().includes("select")) {
