@@ -22,7 +22,7 @@
     const STRINGS = {
       loading: "...",
       successPatients: "Patients posted successfully",
-      errorPatients: "Error posting patients",
+      errorPatients: "Error posting patients: ",
       invalidQuery: "Invalid query type",
       errorPrefix: "Error: "
     };
@@ -53,7 +53,7 @@
         })
         .then((data) => {
           if (typeof data === 'object') {
-            document.getElementById("patients-post-result").innerText = successPatients;
+            document.getElementById("patients-post-result").innerText = STRINGS.successPatients;
           } else {
             document.getElementById("patients-post-result").innerHTML = data;
           }
@@ -73,8 +73,7 @@
           : BASE_URL;
 
       if (requestType === null) {
-        document.getElementById("queryResponse").innerText =
-          "Invalid query type";
+        document.getElementById("queryResponse").innerText = STRINGS.invalidQuery;
         return;
       }
 
@@ -89,8 +88,7 @@
         })
         .then((data) => {
           if (typeof data === 'object') {
-            document.getElementById("queryResponse").innerText =
-              JSON.stringify(data);
+            document.getElementById("queryResponse").innerText = JSON.stringify(data);
           } else {
             document.getElementById("queryResponse").innerHTML = data;
           }
