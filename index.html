@@ -19,6 +19,7 @@
   <button onclick="postPatients()">Post Patients</button>
   <div id="patients-post-result"></div>
   <script>
+    const BASE_URL = "https://lab-5-two.vercel.app/";
     const patients = [
       { name: "Sara Brown", birthdate: "1901-01-01" },
       { name: "John Smith", birthdate: "1941-01-01" },
@@ -27,12 +28,12 @@
     ];
     function postPatients() {
       document.getElementById("patients-post-result").innerText = "";
-      fetch("http://localhost:3000/patients", {
+      fetch(BASE_URL, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(patients),
+        body: JSON.stringify({ query: `INSERT INTO patients VALUES ${patients.map(patient => `('${patient.name}', '${patient.birthdate}')`).join(', ')}` }),
       })
         .then((response) => response.json())
         .then((data) => {
@@ -52,8 +53,8 @@
       const requestType = determineRequestType(query);
       const url =
         requestType === "GET"
-          ? `http://localhost:3000/patients?query=${query}`
-          : `http://localhost:3000/patients`;
+          ? `${BASE_URL}/?query=${query}`
+          : BASE_URL;
 
       if (requestType === null) {
         document.getElementById("queryResponse").innerText =
@@ -61,7 +62,7 @@
         return;
       }
 
-      fetch(url, { method: requestType })
+      fetch(url, { method: requestType, body: requestType === 'POST' ? JSON.stringify({ query }) : null })
         .then((response) => response.json())
         .then((data) => {
           document.getElementById("queryResponse").innerText =
