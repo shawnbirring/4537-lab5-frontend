@@ -5,19 +5,72 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Patients</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    h2 {
+      margin-bottom: 10px;
+    }
+
+    textarea {
+      width: 100%;
+      height: 100px;
+      margin-bottom: 10px;
+      padding: 5px;
+      resize: vertical;
+    }
+
+    button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #queryResponse {
+      margin-top: 10px;
+    }
+
+    #patients-post-result {
+      margin-top: 20px;
+    }
+  </style>
 </head>
 
 <body>
   <h1>Patients Database</h1>
 
-  <div>
+  <div class="container">
     <h2>Query</h2>
     <textarea id="query" placeholder="Enter SQL query"></textarea>
     <button onclick="executeQuery()">Submit</button>
     <div id="queryResponse"></div>
   </div>
-  <button onclick="postPatients()">Post Patients</button>
-  <div id="patients-post-result"></div>
+
+  <div class="container">
+    <button onclick="postPatients()">Post Patients</button>
+    <div id="patients-post-result"></div>
+  </div>
   <script>
     const STRINGS = {
       loading: "...",
