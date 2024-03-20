@@ -121,10 +121,14 @@
       document.getElementById("queryResponse").innerText = STRINGS.loading;
       const query = document.getElementById("query").value;
       const requestType = determineRequestType(query);
-      const url =
-        requestType === "GET"
-          ? `${BASE_URL}?query=${query}`
-          : BASE_URL;
+      let url;
+        if (requestType === "GET") {
+    // Encode the query parameter to handle special characters
+    const encodedQuery = encodeURIComponent(query);
+    url = `${BASE_URL}?query=${encodedQuery}`;
+  } else {
+    url = BASE_URL;
+  }
 
       if (requestType === null) {
         document.getElementById("queryResponse").innerText = STRINGS.invalidQuery;
